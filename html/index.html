@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .area {
+        border: 1px solid black;
+        background-color: cadetblue;
+        position: relative;
+      }
+
+      .part {
+        width: 20px;
+        height: 20px;
+        background-color: black;
+        position: absolute;
+        border-radius: 2px;
+        border: 1px white solid;
+      }
+      .food {
+        width: 20px;
+        height: 20px;
+        background-color: black;
+        border: 1px solid white;
+        position: absolute;
+      }
+      .buttons {
+        width: 60px;
+        height: 60px;
+        background-color: cadetblue;
+        margin-top: 40px;
+        color: black;
+        font-weight: 700;
+      }
+      .buttons img {
+        width: 40px;
+        height: 40px;
+      }
+      .dashboard {
+        display: flex;
+        flex-direction: column-reverse;
+      }
+      .score, .speed {
+        width: 80px;
+        height: 30px;
+        background-color: cadetblue;
+        margin-top: 40px;
+        color: black;
+        position: flex;
+        border: 2px solid black;
+      }
+      .resetbutton {
+        width: 120px;
+        height: 60px;
+        background-color: cadetblue;
+        margin-top: 40px;
+        font-weight: 700;
+        position: flex;
+      }
+      .dashboard_buttons{
+        display: flex;
+        gap: 5px;
+      }
+
+    </style>
+    <!-- <link rel="stylesheet" href="/todo/snake/css/style.css"> -->
+    <!-- <script src="/todo/snake/js/main.js"></script> -->
+  </head>
+  <body onkeydown="handleKeydown(event);">
+    <div class="area" id="area">
+      <div class="food" id="food"></div>
+      <div id="body">
+        <!-- generated -->
+      </div>
+    </div>
+<div id="buttons">
+  <div class="buttons_y"><button class="buttons" onclick="changeDirection('up');"><img src="/todo/snake/svg/up.svg" alt=""></button>
+    <button class="buttons" onclick="changeDirection('down');"><img src="/todo/snake/svg/down.svg" alt=""></button></div>
+    <div class="buttons_x"><button class="buttons" onclick="changeDirection('right');"><img src="/todo/snake/svg/right.svg" alt=""></button>
+      <button class="buttons" onclick="changeDirection('left');"><img src="/todo/snake/svg/left.svg" alt=""></button>
+    </div> 
+</div>
+<div class="dashboard">
+  <button class="resetbutton" onclick="resetGame();">RESET</button>
+  <div class="dashboard_buttons">
+    <div class="score"> score: <span id="score"></span></div>
+    <div class="speed"> speed: <span id="speed"></span></div>
+  </div>
+</div>
+    <script>
+        const scale = 20;
+        const area  = document.getElementById("area");
+        const foodEl = document.getElementById("food"); 
+
+        const areaHeight = 16;
+        const areaWidth = 40;
+
+        let positionX = 5;
+        let positionY = 5;
+        let score = 0; 
+
+        let bodyCoordinates = [
+            {x: 7, y: 5},
+            {x: 8, y: 5},
+            {x: 9, y: 5},
+            {x: 10, y: 5},
+        ]; 
+
+        const food = { x:5, y:5 };
+
+          let direction = "right"; //top left down
+          
+          function resetGame() { 
+            score = 0;
+              area.style.width = `${areaWidth * scale}px`;
+              area.style.height = `${areaHeight * scale}px`;
+              bodyCoordinates = [
+                { x: 7, y: 5 },
+                { x: 8, y: 5 },
+                { x: 9, y: 5 },
+                { x: 10, y: 5 },
+              ];
+              direction = "right"; 
+              positionX = 10;
+              positionY = 5;
+              generateFood(); 
+          }
+          function generateFood () {
+            food.x = Math.floor(Math.random() * areaWidth);
+            food.y = Math.floor(Math.random() * areaHeight);
+            foodEl.style.top = `${food.y * scale}px`;
+            foodEl.style.left = `${food.x * scale}px`;
+          }
+
+          function handleKeydown(event) {
+            console.log (event.key);
+              switch (event.key) {
+                  case "ArrowUp":
+                  case "w":
+                      changeDirection("up");
+                        break;
+                  case "ArrowDown":
+                  case "s":
+                      changeDirection("down");
+                    break;
+                  case "ArrowRight":
+                  case "d":
+                      changeDirection("right");
+                    break;
+                  case "ArrowLeft":
+                  case "a":
+                      changeDirection("left");
+                    break;
+                  }
+               }
+
+          function changeDirection(value) {
+              if (direction === "left" || direction === "right") {
+                  if (value === "up" || value === "down") {
+                      direction = value;
+                     
+                  }
+              } else if (direction === "down" || direction === "up") {
+                  if (value === "right" || value === "left") {
+                      direction = value;
+                  }
+              }
+          }
+          
+          const goRight = () => {
+              positionX += 1;
+              if (positionX > areaWidth - 1) {
+                // gameOver(); 
+                  positionX = 0;
+              }
+          }; 
+
+          function goLeft() {
+
+              positionX -= 1;
+              if (positionX < 0) {
+                // gameOver(); 
+                  positionX = areaWidth -1;
+              }
+          }
+          function goDown() {
+
+              positionY += 1;
+              if (positionY > areaHeight -1) {
+                // gameOver(); 
+                  positionY = 0;
+              }
+          }
+          function goUp() {
+              positionY -= 1;
+              if (positionY < 0) {
+                // gameOver(); 
+                  positionY = areaHeight -1;
+              }
+          }
+
+        const bodyContainer = document.getElementById("body");
+
+      function render() {
+          if (food.x === positionX && food.y === positionY) {
+            bodyCoordinates.unshift(bodyCoordinates[0]);
+            generateFood();
+            score +=5;
+
+            // foodCount ++;
+            // if (foodCount === 5) {
+            // generateBigFood ();
+            // }
+
+            speed = speed - 1; 
+            clearInterval(interval);
+            console.log({speed});
+            interval = setInterval(gameloop,speed);
+            
+            document.getElementById("score").innerText = score; 
+            document.getElementById("speed").innerText = speed;
+        }
+
+        let bodyHtml = "";
+        for (let i = 0; i< bodyCoordinates.length; i++) {
+            bodyHtml += `<div class="part" style="top: ${bodyCoordinates[i].y * scale}px; left: ${bodyCoordinates[i].x * scale}px"></div>`;
+        }
+        bodyContainer.innerHTML = bodyHtml;
+      }
+
+      function gameloop() {
+        switch (direction) {
+            case "up":
+                goUp();
+                break;
+            case "down":
+                goDown();
+                break;
+            case "right":
+                goRight();
+                break;
+            case "left":
+                goLeft();
+                break;
+          }      
+
+          for (let i = 0; i < bodyCoordinates.length; i++) {
+            if (positionX === bodyCoordinates[i].x && positionY === bodyCoordinates[i].y) {
+              gameOver();
+              break;
+            }
+          }
+
+          bodyCoordinates.push({x: positionX, y: positionY});
+          bodyCoordinates.shift();
+
+        render();
+        }
+
+        function gameOver() {
+          alert("Game Over!");
+          speed === speed;
+          resetGame();
+        }
+
+      resetGame();
+
+      let speed = 100;
+
+      let interval = setInterval (gameloop, speed);
+    </script>
+  </body>
+</html>

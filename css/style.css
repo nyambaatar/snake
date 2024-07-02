@@ -1,0 +1,13 @@
+.area { 
+    width: 800px;
+    height: 600px;
+    background-color:rgb(119, 255, 0);
+    position: relative;
+    }
+    .head { 
+    width: 20px;
+    height: 20px;
+    background-color: black;
+    position: absolute;
+    display: none;
+    }  
